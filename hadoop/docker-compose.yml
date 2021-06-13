@@ -1,0 +1,51 @@
+version: "3"
+
+# 이미지와 네트워크 정보에 대한 base service
+x-datanode-base: &datanode_base
+  image: altera526/hadoop-datanode:3.3.0
+  networks:
+    - bridge
+
+services:
+  namenode:
+    image: altera526/hadoop-namenode:3.3.0
+    container_name: namenode
+    hostname: namenode
+    ports:
+      - "9000:9000"
+      - "9870:9870"
+    volumes:
+      - namenode:$HADOOP_HOME/dfs/name
+      - /tmp:/tmp
+    networks:
+      - bridge
+
+  datanode01:
+    <<: *datanode_base
+    container_name: datanode01
+    hostname: datanode01
+    volumes: 
+      - datanode01:/usr/local/hadoop/dfs/data
+
+  datanode02:
+    <<: *datanode_base
+    container_name: datanode02
+    hostname: datanode02
+    volumes: 
+      - datanode02:/usr/local/hadoop/dfs/data
+
+  datanode03:
+    <<: *datanode_base
+    container_name: datanode03
+    hostname: datanode03
+    volumes: 
+      - datanode03:/usr/local/hadoop/dfs/data
+
+volumes:
+  namenode:
+  datanode01:
+  datanode02:
+  datanode03:
+
+networks:
+  bridge:
